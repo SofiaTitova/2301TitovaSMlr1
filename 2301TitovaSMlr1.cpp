@@ -4,9 +4,9 @@
 #include <iostream>
 #include <stdio.h>
 #include <cstdlib>
+//#include <time.h>
+//#include <iomanip>
 #define language 1251
-#include <time.h>
-#include <iomanip>
 
 
 using namespace std;
@@ -28,14 +28,13 @@ void ListPrinting(Node* start, int length) {
 void push_back(Node* tmp, Node* head, Node* tail, int& length, int num) {
 	Node* cur = head->next;
 	for (int i = 1; i < length; i++) {
-		cur = cur->next;
+	cur = cur->next;
 	}
 	tmp = new Node;
 	tmp->info = num;
 	tmp->next = tail;
 	cur->next = tmp;
 	length++;
-	ListPrinting(head, length);
 }
 void push_front(Node* tmp, Node* head, Node* tail, int& length, int num) {
 	tmp = new Node;
@@ -43,11 +42,10 @@ void push_front(Node* tmp, Node* head, Node* tail, int& length, int num) {
 	tmp->next = head->next;
 	head->next = tmp;
 	length++;
-	ListPrinting(head, length);
 }
 void pop_back(Node* tmp, Node* head, Node* tail, int& length) {
 	Node* cur = head->next;
-	for (int i = 1; i < length - 1; i++) { 
+	for (int i = 1; i < length; i++) {
 		cur = cur->next;
 	}
 	tmp = new Node;
@@ -55,7 +53,6 @@ void pop_back(Node* tmp, Node* head, Node* tail, int& length) {
 	cur->next = tail;
 	delete tmp;
 	length--;
-	ListPrinting(head, length);
 }
 void pop_front(Node* tmp, Node* head, Node* tail, int& length) {
 	tmp = new Node;
@@ -63,7 +60,6 @@ void pop_front(Node* tmp, Node* head, Node* tail, int& length) {
 	head->next = tmp->next;
 	delete tmp;
 	length--;
-	ListPrinting(head, length);
 }
 void indexAdd(Node* tmp, Node* head, Node* tail, int& length, int indx, int num) {
 	if (indx == 1) {
@@ -83,7 +79,6 @@ void indexAdd(Node* tmp, Node* head, Node* tail, int& length, int indx, int num)
 			tmp->next = cur->next;
 			cur->next = tmp;
 			length++;
-			ListPrinting(head, length);
 		}
 		else { cout << "Выход за границы списка, элемент с таким индексом отсутствует" << endl; }
 	}
@@ -115,7 +110,6 @@ void indexDel(Node* tmp, Node* head, Node* tail, int& length, int indx) {
 			cur->next = tmp->next;
 			delete tmp;
 			length--;
-			ListPrinting(head, length);
 		}
 	}
 	else { cout << "Выход за границы списка, элемент с таким индексом отсутствует" << endl; }
@@ -126,7 +120,6 @@ void listClear(Node* tmp, Node* head, Node* tail, int& length, int indx) {
 	while (length != 0) {
 		pop_front(tmp, head, tail, length);
 	}
-	ListPrinting(head, length);
 }
 
 void indReplace(Node* head, Node* tail, int& length, int indx, int num) {
@@ -136,7 +129,6 @@ void indReplace(Node* head, Node* tail, int& length, int indx, int num) {
 			cur = cur->next;
 		}
 		cur->info = num;
-		ListPrinting(head, length);
 	}
 	else { cout << "Выход за границы списка, элемент с таким индексом отсутствует" << endl; }
 }
@@ -148,7 +140,7 @@ void emptyCheck(int& length) {
 	else cout << "Список не пустой" << endl;
 }
 
-void newToEnd(Node* head, Node* tail, int& length, bool& insert, Node* start, Node* end, int& lengthSec) {
+void newToEnd(Node* head, Node* tail, int& length, Node* start, Node* end, int& lengthSec) {
 	Node* cur = head->next;
 	Node* cur2 = start->next;
 	for (int i = 1; i < length; i++) {
@@ -160,11 +152,9 @@ void newToEnd(Node* head, Node* tail, int& length, bool& insert, Node* start, No
 	}
 	cur2->next = tail;
 	length += lengthSec;
-	insert = true;
-	ListPrinting(head, length);
 }
 
-void newToStart(Node* head, Node* tail, int& length, bool& insert, Node* start, Node* end, int& lengthSec) {
+void newToStart(Node* head, Node* tail, int& length, Node* start, Node* end, int& lengthSec) {
 	Node* cur2 = start->next;
 	for (int i = 1; i < lengthSec; i++) {
 		cur2 = cur2->next;
@@ -172,48 +162,134 @@ void newToStart(Node* head, Node* tail, int& length, bool& insert, Node* start, 
 	cur2->next = head->next;
 	head->next = start->next;
 	length += lengthSec;
-	insert = true;
-	ListPrinting(head, length);
 }
 
-void insertance(bool insert) {
-	if (insert) {
-		cout << "Список был вставлен в список" << endl;
+void insertance(Node* head, Node* tail, Node* start, Node* end, int lengthFir, int lengthSec) {
+	Node* comparFir = head -> next;
+	Node* comparSec = start -> next;
+	Node* helperSec = start->next;
+	Node* helperFir = head->next;
+	int final = 0;
+	if (lengthFir < lengthSec) {
+		cout << "Дополнительный список не входит в основной список" << endl;
 	}
 	else {
-		cout << "Вставки списка в список не было" << endl;
+		int k = 0;
+		for (int i = 1; i < lengthFir; i++) {
+			if (comparSec->info == comparFir->info) {
+				 helperFir = comparFir;
+				 helperSec = comparSec;
+				while ((comparFir->info == comparSec->info) and (k< lengthSec)){
+					comparFir = comparFir->next;
+					comparSec = comparSec->next;
+					k++;
+				}
+				if (k == lengthSec) {
+					cout << "Дополнительный список входит в основной список" << endl;
+					final = k;
+					break;
+				}
+				else {
+					comparFir = helperFir;
+					comparSec = helperSec;
+					k = 0;
+				}
+			}
+			comparFir = comparFir->next;
+		}
+		if (final == 0) {
+		cout << "Дополнительный список не входит в основной список" << endl;
+		}
 	}
 }
 
-void entFirst(Node* head, Node* tail, Node* start, Node* end, bool& insert, int& length) {
-	Node* add = head;
+void entFirst(Node* head, Node* tail, Node* start, Node* end, int lengthFir, int lengthSec) {
+	Node* comparFir = head->next;
+	Node* comparSec = start->next;
+	Node* helperSec = start->next;
+	Node* helperFir = head->next;
 	int index = 1;
-	while (!(add->next == start->next)) {
-		index += 1;
-		add = add->next;
+	int k = 0;
+	if (lengthFir < lengthSec) {
+		cout << "Дополнительный список не входит в основной список" << endl;
 	}
-	insert = true;
-	cout << "Первое вхождение списка в список (индекс): " << index << endl;
+	else {
+		for (int i = 1; i < lengthFir; i++) {
+			if (comparSec->info == comparFir->info) {
+				helperFir = comparFir;
+				helperSec = comparSec;
+				while ((comparFir->info == comparSec->info) and (k < lengthSec)) {
+
+					comparFir = comparFir->next;
+					comparSec = comparSec->next;
+					k++;
+				}
+				if (k == lengthSec) {
+					cout << "Индекс первого вхождения списка в список " << index << endl;
+					break;
+				}
+				else {
+					comparFir = helperFir;
+					comparSec = helperSec;
+					k = 0;
+				}
+			}
+			comparFir = comparFir->next;
+			index++;
+		}
+	}
+	index = 0;
+	if ((index != 1) and (k==0)) {
+		cout << "Дополнительный список не входит в основной список" << endl;
+	}
 }
 
-void entLast(Node* head, Node* tail, Node* start, Node* end, bool& insert, int& length, int lengthSec) {
-	Node* add = head;
-	int index = 0;
-	while (!(add->next == start->next)) {
-		index += 1;
-		add = add->next;
+void entLast(Node* head, Node* tail, Node* start, Node* end, int lengthFir, int lengthSec) {
+	Node* comparFir = head->next;
+	Node* comparSec = start->next;
+	Node* helperSec = start->next;
+	Node* helperFir = head->next;
+	int index = 1;
+	int k = 0;
+	int final = 0;
+	if (lengthFir < lengthSec) {
+		cout << "Дополнительный список не входит в основной список" << endl;
 	}
-	insert = true;
-	cout << "Последнее вхождение списка в список (индекс): " << index + lengthSec << endl;
+	else {
+		for (int i = 1; i < lengthFir; i++) {
+			if (comparSec->info == comparFir->info) {
+				helperFir = comparFir;
+				helperSec = comparSec;
+				while ((comparFir->info == comparSec->info) and (k < lengthSec)) {
+					comparFir = comparFir->next;
+					comparSec = comparSec->next;
+					k++;
+				}
+				if (k == lengthSec) {
+					final = index + k-1;
+				}
+				k = 0;
+				comparFir = helperFir;
+				comparSec = helperSec;
+			}
+			comparFir = comparFir->next;
+			index++;
+		}
+	}
+	if (final == 0) {
+		cout << "Дополнительный список не входит в основной список" << endl;
+	}
+	else {
+	cout << "Индекс последнего вхождения списка в список " << final << endl;
+	}
 }
 
-void entIndex(Node* head, Node* tail, int& length, bool& insert, Node* start, Node* end, int& lengthSec, int indx) {
+void entIndex(Node* head, Node* tail, int& length, Node* start, Node* end, int& lengthSec, int indx) {
 	if (indx == 1) {
-		newToStart(head, tail, length, insert, start, end, lengthSec);
-
+		newToStart(head, tail, length, start, end, lengthSec);
 	}
 	if (indx == length + 1) {
-		newToEnd(head, tail, length, insert, start, end, lengthSec);
+		newToEnd(head, tail, length,  start, end, lengthSec);
 	}
 	else if (indx != 1) {
 		if ((indx <= length) and (indx >= 0)) {
@@ -229,8 +305,6 @@ void entIndex(Node* head, Node* tail, int& length, bool& insert, Node* start, No
 			}
 			cur3->next = cur2;
 			length += lengthSec;
-			insert = true;
-			ListPrinting(head, length);
 		}
 		else { cout << "Выход за границы списка, элемент с таким индексом отсутствует" << endl; }
 	}
@@ -254,7 +328,6 @@ void reversList(Node*& head, Node*& tail, int& length) {
 		fir++;
 		sec--;
 	}
-	ListPrinting(head, length);
 }
 int menu()
 {
@@ -296,7 +369,6 @@ int menuSec() {
 	return m;
 }
 int main() {
-
 	SetConsoleCP(language); // разрешить русский текст в потоке ввода
 	SetConsoleOutputCP(language); // разрешить русский текст в потоке вывода
 	Node* headFir = new Node;
@@ -312,8 +384,6 @@ int main() {
 	int helper = 0;
 	int choiceAdd = 0;
 	int element = 0;
-	bool insert = false;
-
 	bool addList = true;
 	cout << "Создайте дополнительный список, еcли необходимо" << endl;
 	cout << "Начните заполнение списка: " << endl;
@@ -333,6 +403,7 @@ int main() {
 			cout << "Введите число, которое хотите добавить" << endl;
 			cin >> element;
 			push_back(temp, headSec, tailSec, lengthSec, element);
+			ListPrinting(headSec, lengthSec);
 			break;
 		case 0: addList = false;
 			break;
@@ -359,19 +430,23 @@ int main() {
 			cout << "Введите число, которое хотите добавить" << endl;
 			cin >> choice;
 			push_back(temp, headFir, tailFir, lengthFir, choice);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 2:
 			cout << "Введите число, которое хотите добавить" << endl;
 			cin >> choice;
 			push_front(temp, headFir, tailFir, lengthFir, choice);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 3:
 			cout << "Удален последний элемент списка" << endl;
 			pop_back(temp, headFir, tailFir, lengthFir);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 4:
 			cout << "Удален первый элемент списка" << endl;
 			pop_front(temp, headFir, tailFir, lengthFir);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 5:
 			cout << "Введите индекс, по которому вы хотите добавить элемент" << endl;
@@ -379,6 +454,7 @@ int main() {
 			cout << "Введите число, которое хотите добавить" << endl;
 			cin >> helper;
 			indexAdd(temp, headFir, tailFir, lengthFir, choice, helper);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 6:
 			cout << "Введите индекс элементу, чтобы получить элемент" << endl;
@@ -391,6 +467,7 @@ int main() {
 			cout << "Введите индекс, по которому вы хотите удалить элемент" << endl;
 			cin >> choice;
 			indexDel(temp, headFir, tailFir, lengthFir, choice);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 8:
 			cout << "Размер вашего списка: " << lengthFir << endl;
@@ -405,6 +482,7 @@ int main() {
 			cout << "На что хотите заменить" << endl;
 			cin >> helper;
 			indReplace(headFir, tailFir, lengthFir, choice, helper);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 11:
 			emptyCheck(lengthFir);
@@ -412,36 +490,30 @@ int main() {
 		case 12:
 			cout << "Список в обратоном порядке" << endl;
 			reversList(headFir, tailFir, lengthFir);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 13:
 			cout << "Введите индекс, с которого вы хотите добавить другой список" << endl;
 			cin >> choice;
-			entIndex(headFir, tailFir, lengthFir, insert, headSec, tailSec, lengthSec, choice);
+			entIndex(headFir, tailFir, lengthFir, headSec, tailSec, lengthSec, choice);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 14:
-			newToEnd(headFir, tailFir, lengthFir, insert, headSec, tailSec, lengthSec);
+			newToEnd(headFir, tailFir, lengthFir,headSec, tailSec, lengthSec);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 15:
-			newToStart(headFir, tailFir, lengthFir, insert, headSec, tailSec, lengthSec);
+			newToStart(headFir, tailFir, lengthFir,headSec, tailSec, lengthSec);
+			ListPrinting(headFir, lengthFir);
 			break;
 		case 16:
-			insertance(insert);
+			insertance(headFir, tailFir, headSec, tailSec, lengthFir,  lengthSec);
 			break;
 		case 17:
-			if (insert) {
-				entFirst(headFir, tailFir, headSec, tailSec, insert, lengthFir);
-			}
-			else {
-				cout << "Вхождений в список нет" << endl;
-			}
+			entFirst(headFir, tailFir, headSec, tailSec, lengthFir, lengthSec);
 			break;
 		case 18:
-			if (insert) {
-				entLast(headFir, tailFir, headSec, tailSec, insert, lengthFir, lengthSec);
-			}
-			else {
-				cout << "Вхождений в список нет" << endl;
-			}
+			entLast(headFir, tailFir, headSec, tailSec,  lengthFir, lengthSec);
 			break;
 		case 19:
 			cout << "Введите индекс первого элемента" << endl;
@@ -460,3 +532,9 @@ int main() {
 	return 0;
 }
   
+//clock_t start, end;
+//start = clock();
+//end = clock();
+//time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+//cout << "Time taken by program is : " << fixed << time_taken << setprecision(5);
+//cout << " sec " << endl;
